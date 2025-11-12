@@ -566,16 +566,25 @@ function displayResultsTable(data) {
     const thead = table.querySelector('thead');
     const tbody = table.querySelector('tbody');
     
-    if (!data.predicciones || data.predicciones.length === 0) {
+    // Usar results o predicciones (compatibilidad con ambos formatos)
+    const results = data.results || data.predicciones || [];
+    
+    if (!results || results.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="5" style="text-align: center; padding: 2rem; color: var(--text-secondary);">No hay predicciones para mostrar</td></tr>';
         return;
     }
     
-    // Crear encabezados básicos
-    thead.innerHTML = '<tr><th>Fila</th><th>Predicción</th><th>Probabilidad</th></tr>';
+    // Crear encabezados - verificar si hay evaluación para mostrar columnas adicionales
+    let headerHTML = '<tr><th>Fila</th><th>Predicción</th><th>Probabilidades</th>';
+    if (data.evaluation && results[0] && results[0].true_diagnosis !== undefined) {
+        headerHTML += '<th>Valor Real</th><th>Correcto</th>';
+    }
+    headerHTML += '</tr>';
+    thead.innerHTML = headerHTML;
     
     // Crear filas con mejor formato
     tbody.innerHTML = '';
-    data.predicciones.forEach((row, index) => {
+    results.forEach((row, index) => {
         const tr = document.createElement('tr');
         
         // Fila
@@ -585,39 +594,84 @@ function displayResultsTable(data) {
         
         // Predicción con tag de color
         const tdPred = document.createElement('td');
-        const predictionLabel = row['Prediccion_Label'] || 'Desconocido';
+        // Usar diagnosis_label (formato backend) o Prediccion_Label (formato antiguo)
+        const predictionLabel = row.diagnosis_label || row['Prediccion_Label'] || 'Desconocido';
         const tagClass = getTagClass(predictionLabel);
         tdPred.innerHTML = `<span class="prediction-tag ${tagClass}">${predictionLabel}</span>`;
         tr.appendChild(tdPred);
         
-        // Probabilidad con barra
+        // Probabilidades - usar el formato del backend (probabilities)
         const tdProb = document.createElement('td');
-        let maxProb = 0;
-        let maxProbClass = '';
+        let probHTML = '';
         
-        // Buscar la máxima probabilidad
-        Object.keys(row).forEach(key => {
-            if (key.startsWith('Probabilidad_')) {
-                const prob = parseFloat(row[key]);
-                if (prob > maxProb) {
-                    maxProb = prob;
-                    maxProbClass = key.replace('Probabilidad_', '');
-                }
-            }
-        });
-        
-        if (maxProb > 0) {
-            const percentage = (maxProb * 100).toFixed(2);
-            tdProb.innerHTML = `
-                <div class="probability-container">
-                    <div class="probability-bar" style="width: ${percentage}%"></div>
-                    <span class="probability-text">${percentage}%</span>
-                </div>
-            `;
+        if (row.probabilities) {
+            // Formato del backend: {1: float, 2: float, 3: float}
+            const probs = row.probabilities;
+            const diseases = ['Dengue', 'Malaria', 'Leptospirosis'];
+            const probValues = [
+                { name: diseases[0], value: probs[1] || 0 },
+                { name: diseases[1], value: probs[2] || 0 },
+                { name: diseases[2], value: probs[3] || 0 }
+            ];
+            
+            // Ordenar por probabilidad descendente
+            probValues.sort((a, b) => b.value - a.value);
+            
+            // Mostrar todas las probabilidades
+            probHTML = '<div style="display: flex; flex-direction: column; gap: 0.25rem;">';
+            probValues.forEach(prob => {
+                const percent = (prob.value * 100).toFixed(1);
+                probHTML += `<div style="font-size: 0.85rem;">
+                    <span style="font-weight: 600;">${prob.name}:</span> 
+                    <span style="color: var(--text-secondary);">${percent}%</span>
+                </div>`;
+            });
+            probHTML += '</div>';
         } else {
-            tdProb.textContent = 'N/A';
+            // Formato antiguo: buscar Probabilidad_*
+            let maxProb = 0;
+            Object.keys(row).forEach(key => {
+                if (key.startsWith('Probabilidad_')) {
+                    const prob = parseFloat(row[key]);
+                    if (prob > maxProb) {
+                        maxProb = prob;
+                    }
+                }
+            });
+            
+            if (maxProb > 0) {
+                const percentage = (maxProb * 100).toFixed(2);
+                probHTML = `
+                    <div class="probability-container">
+                        <div class="probability-bar" style="width: ${percentage}%"></div>
+                        <span class="probability-text">${percentage}%</span>
+                    </div>
+                `;
+            } else {
+                probHTML = 'N/A';
+            }
         }
+        
+        tdProb.innerHTML = probHTML;
         tr.appendChild(tdProb);
+        
+        // Agregar columnas de evaluación si existen
+        if (data.evaluation && row.true_diagnosis !== undefined) {
+            // Valor real
+            const tdTrue = document.createElement('td');
+            const trueLabel = DIAGNOSIS_LABELS[row.true_diagnosis] || `Clase ${row.true_diagnosis}`;
+            tdTrue.textContent = trueLabel;
+            tr.appendChild(tdTrue);
+            
+            // Correcto
+            const tdCorrect = document.createElement('td');
+            if (row.correct) {
+                tdCorrect.innerHTML = '<span style="color: #10b981; font-weight: 600;">✓</span>';
+            } else {
+                tdCorrect.innerHTML = '<span style="color: #ef4444; font-weight: 600;">✗</span>';
+            }
+            tr.appendChild(tdCorrect);
+        }
         
         tbody.appendChild(tr);
     });
