@@ -1,0 +1,473 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema de Predicción - Proyecto Final</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="header-decor"></div>
+            <div class="header-content">
+                <div class="header-title">
+                    <h1>Sistema de Predicción</h1>
+                    <p class="subtitle">Proyecto Final - Análisis Predictivo</p>
+                </div>
+                <div class="header-actions">
+                    <div class="model-selector-wrapper">
+                        <label for="model-selector" class="model-label">Modelo:</label>
+                        <select id="model-selector" class="model-selector">
+                            <option value="logistic_regression">Regresión Logística</option>
+                            <option value="neural_network">Red Neuronal</option>
+                        </select>
+                    </div>
+                    <div class="theme-toggle" title="Cambiar tema">
+                        <input type="checkbox" id="theme-toggle" aria-label="Cambiar tema">
+                        <label for="theme-toggle" class="toggle-label">
+                            <span class="icon-sun">☀</span>
+                            <span class="toggle-thumb"></span>
+                            <span class="icon-moon">🌙</span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <div class="tabs">
+            <button class="tab-button active" onclick="showTab('individual')">Predicción Individual</button>
+            <button class="tab-button" onclick="showTab('batch')">Predicción por Lotes</button>
+        </div>
+
+        <!-- Predicción Individual -->
+        <div id="individual-tab" class="tab-content active">
+            <div class="form-container">
+                <h2>Predicción Individual</h2>
+                <form id="individual-form">
+                    <!-- Información Demográfica -->
+                    <div class="form-section">
+                        <h3>Información Demográfica</h3>
+                        <div class="form-group">
+                            <label for="edad">
+                                Edad (Años)
+                                <span class="required">*</span>
+                            </label>
+                            <span class="range-hint">0 - 100 años</span>
+                            <input type="number" id="edad" name="edad" min="0" max="100" placeholder="Ingrese edad en años" required>
+                        </div>
+                        <div class="form-group">
+                            <label>
+                                Género (Sexo)
+                                <span class="required">*</span>
+                            </label>
+                            <span class="field-description">Seleccione el género del paciente</span>
+                            <div class="radio-group">
+                                <label class="radio-label">
+                                    <input type="radio" name="genero" value="masculino" required>
+                                    Masculino
+                                </label>
+                                <label class="radio-label">
+                                    <input type="radio" name="genero" value="femenino" required>
+                                    Femenino
+                                </label>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>
+                                Origen
+                                <span class="required">*</span>
+                            </label>
+                            <span class="field-description">Seleccione el origen del paciente</span>
+                            <div class="radio-group">
+                                <label class="radio-label">
+                                    <input type="radio" name="origen" value="urbano" required>
+                                    Origen urbano
+                                </label>
+                                <label class="radio-label">
+                                    <input type="radio" name="origen" value="rural" required>
+                                    Origen rural
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Signos Vitales y Hospitalización -->
+                    <div class="form-section">
+                        <h3>Signos Vitales y Hospitalización</h3>
+                        <div class="form-group">
+                            <label for="temperatura">
+                                Temperatura Corporal (°C)
+                                <span class="required">*</span>
+                            </label>
+                            <span class="range-hint">35 - 42 grados Celsius</span>
+                            <input type="number" id="temperatura" name="temperatura" min="35" max="42" step="0.1" placeholder="Ingrese temperatura corporal en grados Celsius" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="dias_hospitalizacion">Días de Hospitalización</label>
+                            <span class="range-hint">1 - 30 días</span>
+                            <input type="number" id="dias_hospitalizacion" name="dias_hospitalizacion" min="1" max="30" placeholder="Ingrese número de días de hospitalización">
+                        </div>
+                    </div>
+
+                    <!-- Síntomas -->
+                    <div class="form-section">
+                        <h3>Síntomas</h3>
+                        <span class="field-description">Seleccione los síntomas que presenta el paciente (puede seleccionar múltiples)</span>
+                        <div class="symptoms-grid">
+                            <div class="form-group checkbox-group">
+                                <label class="checkbox-label">
+                                    <input type="checkbox" name="sintomas" value="fever">
+                                    <span>Fiebre</span>
+                                </label>
+                            </div>
+                            <div class="form-group checkbox-group">
+                                <label class="checkbox-label">
+                                    <input type="checkbox" name="sintomas" value="headache">
+                                    <span>Dolor de Cabeza</span>
+                                </label>
+                            </div>
+                            <div class="form-group checkbox-group">
+                                <label class="checkbox-label">
+                                    <input type="checkbox" name="sintomas" value="dizziness">
+                                    <span>Mareo</span>
+                                </label>
+                            </div>
+                            <div class="form-group checkbox-group">
+                                <label class="checkbox-label">
+                                    <input type="checkbox" name="sintomas" value="loss_of_appetite">
+                                    <span>Pérdida de Apetito</span>
+                                </label>
+                            </div>
+                            <div class="form-group checkbox-group">
+                                <label class="checkbox-label">
+                                    <input type="checkbox" name="sintomas" value="weakness">
+                                    <span>Debilidad</span>
+                                </label>
+                            </div>
+                            <div class="form-group checkbox-group">
+                                <label class="checkbox-label">
+                                    <input type="checkbox" name="sintomas" value="myalgias">
+                                    <span>Mialgias (Dolor Muscular)</span>
+                                </label>
+                            </div>
+                            <div class="form-group checkbox-group">
+                                <label class="checkbox-label">
+                                    <input type="checkbox" name="sintomas" value="arthralgias">
+                                    <span>Artralgias (Dolor Articular)</span>
+                                </label>
+                            </div>
+                            <div class="form-group checkbox-group">
+                                <label class="checkbox-label">
+                                    <input type="checkbox" name="sintomas" value="eye_pain">
+                                    <span>Dolor Ocular</span>
+                                </label>
+                            </div>
+                            <div class="form-group checkbox-group">
+                                <label class="checkbox-label">
+                                    <input type="checkbox" name="sintomas" value="hemorrhages">
+                                    <span>Hemorragias</span>
+                                </label>
+                            </div>
+                            <div class="form-group checkbox-group">
+                                <label class="checkbox-label">
+                                    <input type="checkbox" name="sintomas" value="vomiting">
+                                    <span>Vómitos</span>
+                                </label>
+                            </div>
+                            <div class="form-group checkbox-group">
+                                <label class="checkbox-label">
+                                    <input type="checkbox" name="sintomas" value="abdominal_pain">
+                                    <span>Dolor Abdominal</span>
+                                </label>
+                            </div>
+                            <div class="form-group checkbox-group">
+                                <label class="checkbox-label">
+                                    <input type="checkbox" name="sintomas" value="chills">
+                                    <span>Escalofríos</span>
+                                </label>
+                            </div>
+                            <div class="form-group checkbox-group">
+                                <label class="checkbox-label">
+                                    <input type="checkbox" name="sintomas" value="hemoptysis">
+                                    <span>Hemoptisis (Tos con Sangre)</span>
+                                </label>
+                            </div>
+                            <div class="form-group checkbox-group">
+                                <label class="checkbox-label">
+                                    <input type="checkbox" name="sintomas" value="edema">
+                                    <span>Edema</span>
+                                </label>
+                            </div>
+                            <div class="form-group checkbox-group">
+                                <label class="checkbox-label">
+                                    <input type="checkbox" name="sintomas" value="jaundice">
+                                    <span>Ictericia</span>
+                                </label>
+                            </div>
+                            <div class="form-group checkbox-group">
+                                <label class="checkbox-label">
+                                    <input type="checkbox" name="sintomas" value="bruises">
+                                    <span>Moretones</span>
+                                </label>
+                            </div>
+                            <div class="form-group checkbox-group">
+                                <label class="checkbox-label">
+                                    <input type="checkbox" name="sintomas" value="petechiae">
+                                    <span>Petequias</span>
+                                </label>
+                            </div>
+                            <div class="form-group checkbox-group">
+                                <label class="checkbox-label">
+                                    <input type="checkbox" name="sintomas" value="rash">
+                                    <span>Erupción Cutánea</span>
+                                </label>
+                            </div>
+                            <div class="form-group checkbox-group">
+                                <label class="checkbox-label">
+                                    <input type="checkbox" name="sintomas" value="diarrhea">
+                                    <span>Diarrea</span>
+                                </label>
+                            </div>
+                            <div class="form-group checkbox-group">
+                                <label class="checkbox-label">
+                                    <input type="checkbox" name="sintomas" value="respiratory_difficulty">
+                                    <span>Dificultad Respiratoria</span>
+                                </label>
+                            </div>
+                            <div class="form-group checkbox-group">
+                                <label class="checkbox-label">
+                                    <input type="checkbox" name="sintomas" value="itching">
+                                    <span>Picazón</span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Laboratorio -->
+                    <div class="form-section">
+                        <h3>Laboratorio</h3>
+                        <span class="field-description">Ingrese los valores de laboratorio (opcionales - si no se completan, se usarán 0)</span>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="hematocrito">Hematocrito (%)</label>
+                                <span class="range-hint">35 - 50 %</span>
+                                <input type="number" id="hematocrito" name="hematocrito" step="0.1" min="0" placeholder="Ej: 42.0">
+                            </div>
+                            <div class="form-group">
+                                <label for="hemoglobina">Hemoglobina (g/dL)</label>
+                                <span class="range-hint">12 - 17 g/dL</span>
+                                <input type="number" id="hemoglobina" name="hemoglobina" step="0.1" min="0" placeholder="Ej: 14.5">
+                            </div>
+                            <div class="form-group">
+                                <label for="globulos_rojos">Glóbulos rojos (mil/µL)</label>
+                                <span class="range-hint">4 - 6 mil/µL</span>
+                                <input type="number" id="globulos_rojos" name="globulos_rojos" step="0.1" min="0" placeholder="Ej: 4.5">
+                            </div>
+                            <div class="form-group">
+                                <label for="globulos_blancos">Glóbulos blancos (mil/µL)</label>
+                                <span class="range-hint">4 - 11 mil/µL</span>
+                                <input type="number" id="globulos_blancos" name="globulos_blancos" step="0.1" min="0" placeholder="Ej: 7500">
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="neutrofilos">Neutrófilos (%)</label>
+                                <span class="range-hint">40 - 70 %</span>
+                                <input type="number" id="neutrofilos" name="neutrofilos" step="0.1" min="0" max="100" placeholder="Ej: 60.0">
+                            </div>
+                            <div class="form-group">
+                                <label for="eosinofilos">Eosinófilos (%)</label>
+                                <span class="range-hint">1 - 4 %</span>
+                                <input type="number" id="eosinofilos" name="eosinofilos" step="0.1" min="0" max="100" placeholder="Ej: 2.0">
+                            </div>
+                            <div class="form-group">
+                                <label for="basofilos">Basófilos (%)</label>
+                                <span class="range-hint">0 - 1 %</span>
+                                <input type="number" id="basofilos" name="basofilos" step="0.1" min="0" max="100" placeholder="Ej: 0.5">
+                            </div>
+                            <div class="form-group">
+                                <label for="monocitos">Monocitos (%)</label>
+                                <span class="range-hint">2 - 8 %</span>
+                                <input type="number" id="monocitos" name="monocitos" step="0.1" min="0" max="100" placeholder="Ej: 5.0">
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="linfocitos">Linfocitos (%)</label>
+                                <span class="range-hint">20 - 40 %</span>
+                                <input type="number" id="linfocitos" name="linfocitos" step="0.1" min="0" max="100" placeholder="Ej: 30.0">
+                            </div>
+                            <div class="form-group">
+                                <label for="plaquetas">Plaquetas (mil/µL)</label>
+                                <span class="range-hint">150 - 450 mil/µL</span>
+                                <input type="number" id="plaquetas" name="plaquetas" step="1" min="0" placeholder="Ej: 250000">
+                            </div>
+                            <div class="form-group">
+                                <label for="ast">AST (GOT) (U/L)</label>
+                                <span class="range-hint">0 - 40 U/L</span>
+                                <input type="number" id="ast" name="ast" step="0.1" min="0" placeholder="Ej: 45">
+                            </div>
+                            <div class="form-group">
+                                <label for="alt">ALT (GPT) (U/L)</label>
+                                <span class="range-hint">0 - 40 U/L</span>
+                                <input type="number" id="alt" name="alt" step="0.1" min="0" placeholder="Ej: 38">
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="fosfatasa_alcalina">Fosfatasa alcalina (U/L)</label>
+                                <span class="range-hint">44 - 147 U/L</span>
+                                <input type="number" id="fosfatasa_alcalina" name="fosfatasa_alcalina" step="0.1" min="0" placeholder="Ej: 95">
+                            </div>
+                            <div class="form-group">
+                                <label for="bilirrubina_total">Bilirrubina total (mg/dL)</label>
+                                <span class="range-hint">0.1 - 1.2 mg/dL</span>
+                                <input type="number" id="bilirrubina_total" name="bilirrubina_total" step="0.1" min="0" placeholder="Ej: 1.2">
+                            </div>
+                            <div class="form-group">
+                                <label for="bilirrubina_directa">Bilirrubina directa (mg/dL)</label>
+                                <span class="range-hint">0 - 0.3 mg/dL</span>
+                                <input type="number" id="bilirrubina_directa" name="bilirrubina_directa" step="0.1" min="0" placeholder="Ej: 0.3">
+                            </div>
+                            <div class="form-group">
+                                <label for="bilirrubina_indirecta">Bilirrubina indirecta (mg/dL)</label>
+                                <span class="range-hint">0.2 - 0.9 mg/dL</span>
+                                <input type="number" id="bilirrubina_indirecta" name="bilirrubina_indirecta" step="0.1" min="0" placeholder="Ej: 0.9">
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="proteinas_totales">Proteínas totales (g/dL)</label>
+                                <span class="range-hint">6 - 8.3 g/dL</span>
+                                <input type="number" id="proteinas_totales" name="proteinas_totales" step="0.1" min="0" placeholder="Ej: 7.2">
+                            </div>
+                            <div class="form-group">
+                                <label for="albumina">Albúmina (g/dL)</label>
+                                <span class="range-hint">3.5 - 5 g/dL</span>
+                                <input type="number" id="albumina" name="albumina" step="0.1" min="0" placeholder="Ej: 4.5">
+                            </div>
+                            <div class="form-group">
+                                <label for="creatinina">Creatinina (mg/dL)</label>
+                                <span class="range-hint">0.6 - 1.3 mg/dL</span>
+                                <input type="number" id="creatinina" name="creatinina" step="0.1" min="0" placeholder="Ej: 0.9">
+                            </div>
+                            <div class="form-group">
+                                <label for="urea">Urea (mg/dL)</label>
+                                <span class="range-hint">10 - 50 mg/dL</span>
+                                <input type="number" id="urea" name="urea" step="0.1" min="0" placeholder="Ej: 25">
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <button type="submit" class="btn btn-primary">Predecir</button>
+                </form>
+                
+                <div id="individual-result" class="result-container" style="display: none;">
+                    <h3>Resultado de la Predicción</h3>
+                    <div class="result-box">
+                        <p><strong>Predicción:</strong> <span id="prediction-label"></span></p>
+                        <p><strong>Probabilidades:</strong></p>
+                        <ul id="probabilities-list">
+                            <!-- Se llenará dinámicamente -->
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Predicción por Lotes -->
+        <div id="batch-tab" class="tab-content">
+            <div class="form-container">
+                <h2>Predicción por Lotes</h2>
+                <form id="batch-form" enctype="multipart/form-data">
+                    <div class="form-group">
+                        <label for="file-upload">Cargar archivo (.xlsx o .csv)</label>
+                        <div class="file-upload-wrapper">
+                            <input type="file" id="file-upload" name="file" accept=".csv,.xlsx,.xls" required>
+                            <span class="file-info">Formatos soportados: .csv, .xlsx</span>
+                        </div>
+                        <div class="file-requirements">
+                            <p><strong>Requisitos del archivo:</strong></p>
+                            <ul>
+                                <li>Formatos soportados: <code>.xlsx</code>, <code>.xls</code>, <code>.csv</code></li>
+                                <li>Debe contener columnas numéricas con datos del paciente (edad, temperatura, síntomas, etc.)</li>
+                                <li>Los nombres de columnas pueden tener variaciones (mayúsculas/minúsculas, espacios)</li>
+                                <li>Opcional: Columna <code>Etiqueta</code>, <code>Target</code> o <code>Clase</code> para calcular métricas</li>
+                                <li>El sistema detectará automáticamente las columnas necesarias</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Predecir</button>
+                </form>
+
+                <div id="batch-result" class="result-container" style="display: none;">
+                    <div class="results-header">
+                        <h3>Resumen de Predicciones</h3>
+                        <button id="download-csv-btn" class="btn-download-csv">
+                            <span>⬇</span> Descargar CSV
+                        </button>
+                    </div>
+                    
+                    <!-- Resumen con tarjetas -->
+                    <div id="summary-cards" class="summary-cards"></div>
+                    
+                    <!-- Métricas -->
+                    <div id="metrics-section" class="metrics-section">
+                        <h4>Métricas de Evaluación</h4>
+                        <div id="metrics-by-class-section"></div>
+                        <div class="metrics-grid" id="metrics-grid"></div>
+                    </div>
+
+                    <!-- Matriz de Confusión -->
+                    <div id="confusion-matrix-section" class="confusion-matrix-section">
+                        <h4>Matriz de Confusión</h4>
+                        <div id="confusion-matrix" class="confusion-matrix"></div>
+                    </div>
+
+                    <!-- Tabla de Resultados -->
+                    <div class="results-table-section">
+                        <h4>Predicciones Detalladas</h4>
+                        <div class="table-wrapper">
+                            <table id="results-table" class="results-table">
+                                <thead></thead>
+                                <tbody></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="loading" class="loading" style="display: none;">
+            <div class="spinner"></div>
+            <p>Procesando...</p>
+        </div>
+
+        <div id="error-message" class="error-message" style="display: none;"></div>
+    </div>
+
+    <!-- Modal de Información de Predicción -->
+    <div id="prediction-info-modal" class="modal" style="display: none;">
+        <div class="modal-overlay" onclick="closePredictionInfoModal()"></div>
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>📊 Información de la Predicción</h3>
+                <button class="modal-close" onclick="closePredictionInfoModal()">×</button>
+            </div>
+            <div class="modal-body" id="prediction-info-content">
+                <!-- Se llenará dinámicamente -->
+            </div>
+            <div class="modal-footer">
+                <button class="btn-primary" onclick="closePredictionInfoModal()">Entendido</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>
+
