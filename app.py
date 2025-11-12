@@ -793,4 +793,8 @@ if __name__ == '__main__':
     print('[ML] Inicializando modelos...')
     init_models()
     print('[ML] Modelos inicializados')
-    app.run(debug=True, port=5000)
+    
+    # Configuración para producción (Render)
+    port = int(os.environ.get('PORT', 5000))
+    debug = os.environ.get('FLASK_ENV') == 'development'
+    app.run(host='0.0.0.0', port=port, debug=debug)
