@@ -15,8 +15,8 @@
             <div class="header-decor"></div>
             <div class="header-content">
                 <div class="header-title">
-                    <h1>Sistema de Predicción</h1>
-                    <p class="subtitle">Proyecto Final - Análisis Predictivo</p>
+                    <h1>Sistema de Predicción de Enfermedades</h1>
+                    <p class="subtitle">Sistema de inteligencia artificial que analiza datos clínicos y de laboratorio para predecir enfermedades febriles: Dengue, Malaria y Leptospirosis</p>
                 </div>
                 <div class="header-actions">
                     <div class="model-selector-wrapper">
@@ -73,23 +73,6 @@
                                 <label class="radio-label">
                                     <input type="radio" name="genero" value="femenino" required>
                                     Femenino
-                                </label>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label>
-                                Origen
-                                <span class="required">*</span>
-                            </label>
-                            <span class="field-description">Seleccione el origen del paciente</span>
-                            <div class="radio-group">
-                                <label class="radio-label">
-                                    <input type="radio" name="origen" value="urbano" required>
-                                    Origen urbano
-                                </label>
-                                <label class="radio-label">
-                                    <input type="radio" name="origen" value="rural" required>
-                                    Origen rural
                                 </label>
                             </div>
                         </div>
@@ -247,119 +230,46 @@
                         </div>
                     </div>
 
-                    <!-- Laboratorio -->
+                    <!-- Campos adicionales (existentes) -->
                     <div class="form-section">
-                        <h3>Laboratorio</h3>
-                        <span class="field-description">Ingrese los valores de laboratorio (opcionales - si no se completan, se usarán 0)</span>
+                        <h3>Datos Adicionales</h3>
                         <div class="form-row">
                             <div class="form-group">
-                                <label for="hematocrito">Hematocrito (%)</label>
-                                <span class="range-hint">35 - 50 %</span>
-                                <input type="number" id="hematocrito" name="hematocrito" step="0.1" min="0" placeholder="Ej: 42.0">
+                                <label for="material">
+                                    Material (Material Biológico)
+                                    <span class="field-info" title="Material biológico o muestra de laboratorio">ℹ️</span>
+                                </label>
+                                <span class="field-description">Material biológico o muestra</span>
+                                <input type="number" id="material" name="material" step="any" placeholder="Ingrese valor de material">
                             </div>
                             <div class="form-group">
-                                <label for="hemoglobina">Hemoglobina (g/dL)</label>
-                                <span class="range-hint">12 - 17 g/dL</span>
-                                <input type="number" id="hemoglobina" name="hemoglobina" step="0.1" min="0" placeholder="Ej: 14.5">
+                                <label for="t_reg">
+                                    T. Reg (Temperatura Regular)
+                                    <span class="field-info" title="Temperatura regular o temperatura de regulación">ℹ️</span>
+                                </label>
+                                <span class="field-description">Temperatura regular o de regulación</span>
+                                <input type="number" id="t_reg" name="t_reg" step="any" placeholder="Ingrese temperatura regular">
                             </div>
                             <div class="form-group">
-                                <label for="globulos_rojos">Glóbulos rojos (mil/µL)</label>
-                                <span class="range-hint">4 - 6 mil/µL</span>
-                                <input type="number" id="globulos_rojos" name="globulos_rojos" step="0.1" min="0" placeholder="Ej: 4.5">
-                            </div>
-                            <div class="form-group">
-                                <label for="globulos_blancos">Glóbulos blancos (mil/µL)</label>
-                                <span class="range-hint">4 - 11 mil/µL</span>
-                                <input type="number" id="globulos_blancos" name="globulos_blancos" step="0.1" min="0" placeholder="Ej: 7500">
+                                <label for="mali">
+                                    Mali (Indicador Mali)
+                                    <span class="field-info" title="Indicador Mali o parámetro relacionado">ℹ️</span>
+                                </label>
+                                <span class="field-description">Indicador Mali o parámetro</span>
+                                <input type="number" id="mali" name="mali" step="any" placeholder="Ingrese valor Mali">
                             </div>
                         </div>
-                        <div class="form-row">
-                            <div class="form-group">
-                                <label for="neutrofilos">Neutrófilos (%)</label>
-                                <span class="range-hint">40 - 70 %</span>
-                                <input type="number" id="neutrofilos" name="neutrofilos" step="0.1" min="0" max="100" placeholder="Ej: 60.0">
-                            </div>
-                            <div class="form-group">
-                                <label for="eosinofilos">Eosinófilos (%)</label>
-                                <span class="range-hint">1 - 4 %</span>
-                                <input type="number" id="eosinofilos" name="eosinofilos" step="0.1" min="0" max="100" placeholder="Ej: 2.0">
-                            </div>
-                            <div class="form-group">
-                                <label for="basofilos">Basófilos (%)</label>
-                                <span class="range-hint">0 - 1 %</span>
-                                <input type="number" id="basofilos" name="basofilos" step="0.1" min="0" max="100" placeholder="Ej: 0.5">
-                            </div>
-                            <div class="form-group">
-                                <label for="monocitos">Monocitos (%)</label>
-                                <span class="range-hint">2 - 8 %</span>
-                                <input type="number" id="monocitos" name="monocitos" step="0.1" min="0" max="100" placeholder="Ej: 5.0">
-                            </div>
-                        </div>
-                        <div class="form-row">
-                            <div class="form-group">
-                                <label for="linfocitos">Linfocitos (%)</label>
-                                <span class="range-hint">20 - 40 %</span>
-                                <input type="number" id="linfocitos" name="linfocitos" step="0.1" min="0" max="100" placeholder="Ej: 30.0">
-                            </div>
-                            <div class="form-group">
-                                <label for="plaquetas">Plaquetas (mil/µL)</label>
-                                <span class="range-hint">150 - 450 mil/µL</span>
-                                <input type="number" id="plaquetas" name="plaquetas" step="1" min="0" placeholder="Ej: 250000">
-                            </div>
-                            <div class="form-group">
-                                <label for="ast">AST (GOT) (U/L)</label>
-                                <span class="range-hint">0 - 40 U/L</span>
-                                <input type="number" id="ast" name="ast" step="0.1" min="0" placeholder="Ej: 45">
-                            </div>
-                            <div class="form-group">
-                                <label for="alt">ALT (GPT) (U/L)</label>
-                                <span class="range-hint">0 - 40 U/L</span>
-                                <input type="number" id="alt" name="alt" step="0.1" min="0" placeholder="Ej: 38">
-                            </div>
-                        </div>
-                        <div class="form-row">
-                            <div class="form-group">
-                                <label for="fosfatasa_alcalina">Fosfatasa alcalina (U/L)</label>
-                                <span class="range-hint">44 - 147 U/L</span>
-                                <input type="number" id="fosfatasa_alcalina" name="fosfatasa_alcalina" step="0.1" min="0" placeholder="Ej: 95">
-                            </div>
-                            <div class="form-group">
-                                <label for="bilirrubina_total">Bilirrubina total (mg/dL)</label>
-                                <span class="range-hint">0.1 - 1.2 mg/dL</span>
-                                <input type="number" id="bilirrubina_total" name="bilirrubina_total" step="0.1" min="0" placeholder="Ej: 1.2">
-                            </div>
-                            <div class="form-group">
-                                <label for="bilirrubina_directa">Bilirrubina directa (mg/dL)</label>
-                                <span class="range-hint">0 - 0.3 mg/dL</span>
-                                <input type="number" id="bilirrubina_directa" name="bilirrubina_directa" step="0.1" min="0" placeholder="Ej: 0.3">
-                            </div>
-                            <div class="form-group">
-                                <label for="bilirrubina_indirecta">Bilirrubina indirecta (mg/dL)</label>
-                                <span class="range-hint">0.2 - 0.9 mg/dL</span>
-                                <input type="number" id="bilirrubina_indirecta" name="bilirrubina_indirecta" step="0.1" min="0" placeholder="Ej: 0.9">
-                            </div>
-                        </div>
-                        <div class="form-row">
-                            <div class="form-group">
-                                <label for="proteinas_totales">Proteínas totales (g/dL)</label>
-                                <span class="range-hint">6 - 8.3 g/dL</span>
-                                <input type="number" id="proteinas_totales" name="proteinas_totales" step="0.1" min="0" placeholder="Ej: 7.2">
-                            </div>
-                            <div class="form-group">
-                                <label for="albumina">Albúmina (g/dL)</label>
-                                <span class="range-hint">3.5 - 5 g/dL</span>
-                                <input type="number" id="albumina" name="albumina" step="0.1" min="0" placeholder="Ej: 4.5">
-                            </div>
-                            <div class="form-group">
-                                <label for="creatinina">Creatinina (mg/dL)</label>
-                                <span class="range-hint">0.6 - 1.3 mg/dL</span>
-                                <input type="number" id="creatinina" name="creatinina" step="0.1" min="0" placeholder="Ej: 0.9">
-                            </div>
-                            <div class="form-group">
-                                <label for="urea">Urea (mg/dL)</label>
-                                <span class="range-hint">10 - 50 mg/dL</span>
-                                <input type="number" id="urea" name="urea" step="0.1" min="0" placeholder="Ej: 25">
-                            </div>
+                        <div class="form-group">
+                            <label for="modelo">
+                                Modelo de Predicción
+                                <span class="field-info" title="Seleccione el modelo de machine learning a utilizar">ℹ️</span>
+                            </label>
+                            <span class="field-description">Modelo de machine learning para la predicción</span>
+                            <select id="modelo" name="modelo">
+                                <option value="">Seleccione un modelo</option>
+                                <option value="modelo1">Modelo 1</option>
+                                <option value="modelo2">Modelo 2</option>
+                            </select>
                         </div>
                     </div>
                     
@@ -394,7 +304,7 @@
                             <p><strong>Requisitos del archivo:</strong></p>
                             <ul>
                                 <li>Formatos soportados: <code>.xlsx</code>, <code>.xls</code>, <code>.csv</code></li>
-                                <li>Debe contener columnas numéricas con datos del paciente (edad, temperatura, síntomas, etc.)</li>
+                                <li>Debe contener las columnas: <code>Material</code>, <code>T. Reg</code>, <code>Mali</code></li>
                                 <li>Los nombres de columnas pueden tener variaciones (mayúsculas/minúsculas, espacios)</li>
                                 <li>Opcional: Columna <code>Etiqueta</code>, <code>Target</code> o <code>Clase</code> para calcular métricas</li>
                                 <li>El sistema detectará automáticamente las columnas necesarias</li>
@@ -448,23 +358,6 @@
         </div>
 
         <div id="error-message" class="error-message" style="display: none;"></div>
-    </div>
-
-    <!-- Modal de Información de Predicción -->
-    <div id="prediction-info-modal" class="modal" style="display: none;">
-        <div class="modal-overlay" onclick="closePredictionInfoModal()"></div>
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3>📊 Información de la Predicción</h3>
-                <button class="modal-close" onclick="closePredictionInfoModal()">×</button>
-            </div>
-            <div class="modal-body" id="prediction-info-content">
-                <!-- Se llenará dinámicamente -->
-            </div>
-            <div class="modal-footer">
-                <button class="btn-primary" onclick="closePredictionInfoModal()">Entendido</button>
-            </div>
-        </div>
     </div>
 
     <script src="{{ url_for('static', filename='script.js') }}"></script>
